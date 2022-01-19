@@ -12,14 +12,26 @@
 </head>
 
 <body>
-    <canvas id="backGround"></canvas>
-    <canvas id="middleGround"></canvas>
-    <canvas id="foreGround"></canvas>
-
+    <div id="spielfeld">
+        <div class="cHelper">
+            <canvas id="backGround"></canvas>
+        </div>
+        <div class="cHelper">
+            <canvas id="middleGround"></canvas>
+        </div>
+        <div class="cHelper">
+            <canvas id="player"></canvas>
+        </div>
+        <div class="cHelper">
+            <canvas id="foreGround"></canvas>
+        </div>
+    </div>
+    <!-- Fallback, falls der Promise nicht funktioniert
     <preloader>
         <img src="img/bg.png" id="imgBG" />
         <img src="img/mg.png" id="imgMG" />
     </preloader>
+    -->
 </body>
 
 </html>
