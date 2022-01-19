@@ -17,10 +17,8 @@ preloader {
 }
 
 #spielfeld .cHelper {
-    position: absolute;
-    display: block;
-    left: 0;
-    right: 0;
+    position: relative;
+    height: 0;
 }
 
 #spielfeld canvas {
@@ -28,4 +26,9 @@ preloader {
     display: block;
     margin-left: auto;
     margin-right: auto;
+    cursor: none;
+}
+
+#foreGround {
+    pointer-events: none;
 }
