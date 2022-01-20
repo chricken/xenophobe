@@ -9,12 +9,12 @@ const createImage = url => {
 const Types = [
     class {
         constructor(angle = Math.PI * 1.5) {
-            this.speed = Math.random() * 1 + 5;
+            this.speed = Math.random() * 1 + 8;
             this.angle = Math.PI * 1.5; // Senkrecht nach oben
             this.img = createImage('./img/shot.png');
-            this.w = .02;
-            this.h = .02;
-            this.nextShotIn = Date.now() + 200;
+            this.w = .03;
+            this.h = .03;
+            this.nextShotIn = Date.now() + 100;
             this.killMe = false;
         }
     }
@@ -30,10 +30,10 @@ class Shot {
         this.cCollide = cCollide;
         this.ctxCollider = cCollide.getContext('2d');
     }
-    update() {
+    update(shotData, mgData) {
         let speed = this.speed / this.c.width
-        // console.log(speed, this.y - speed);
-        if (this.bgHitTest()) this.killMe = true;
+
+        if (this.bgHitTest(shotData.data, mgData.data)) this.killMe = true;
 
         if (this.y - speed > .1) {
             this.y -= speed;
@@ -50,26 +50,19 @@ class Shot {
             this.c.width * this.h,
         )
     }
-    bgHitTest() {
-        let imgShot = this.ctx.getImageData(
-            this.x * this.c.width,
-            this.y * this.c.width,
-            3,3
-        )
-        let imgCollider = this.ctxCollider.getImageData(
-            this.x * this.c.width,
-            this.y * this.c.width,
-            3,3
-        )
-        // console.log(imgShot.data.length);
+    bgHitTest(imgDataShot, imgDataCollider) {
+
+        let x = ~~(this.x * this.c.width);
+        let y = ~~(this.y * this.c.width);
 
         let hit = false;
-       /* for (let i = 0; i < imgShot.data.length; i += 4) {
-            if (imgShot.data[i] > 0) {
-                console.log(imgShot.data[i], imgShot.data[i + 1], imgShot.data[i + 2]);
-            }
+
+        if (imgDataCollider[((y * this.c.width + x) * 4) + 3] > 128) {
+            hit = true;
         }
-        */
+        //console.log();
+
+        return hit;
     }
 }
 

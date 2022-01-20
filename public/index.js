@@ -18,7 +18,7 @@ let timerIDPlay;
 
 
 // DOM-MAPPING
-const obererCanvas = document.querySelector('#player');
+const obererCanvas = document.querySelector('#cPlayer');
 
 
 // FUNKTIONEN
@@ -34,15 +34,18 @@ const animate = () => {
     ctxFG.clearRect(0, 0, cFG.width, cFG.height);
     ctxPlayer.clearRect(0, 0, cPlayer.width, cPlayer.height);
 
-    [environment, player].forEach(obj => obj.update(mousePos));
-    [environment, player].forEach(obj => obj.draw());
+    [environment, player].forEach(obj => {
+        obj.update(mousePos)
+        obj.draw()
+    });
+    //[environment, player].forEach(obj => obj.draw());
 }
 
 const mapDOM = () => {
     cBG = document.querySelector('#backGround');
     cMG = document.querySelector('#middleGround');
     cFG = document.querySelector('#foreGround');
-    cPlayer = document.querySelector('#player');
+    cPlayer = document.querySelector('#cPlayer');
 
     ctxBG = cBG.getContext('2d');
     ctxMG = cMG.getContext('2d');
@@ -52,7 +55,7 @@ const mapDOM = () => {
 
 const init = () => {
     mapDOM();
-    player = new Player(cPlayer, cShots, cMG, './img/player.png');
+    player = new Player();
     environment = new Environment();
     //player.init
     // render.init();

@@ -5,7 +5,7 @@ import Shot from './shot.js';
 let c, ctx, img, cShots;
 
 class Player {
-    constructor(canvas, cShots, cCollide, url) {
+    constructor() {
         //console.log(canvas, url);
         // Position relativ zur Canvasbreite
         this.x = .5;
@@ -17,14 +17,18 @@ class Player {
         this.isShooting = false;
 
         this.shots = [];
-        this.cCollide = cCollide;
 
-        c = canvas;
+        c = document.querySelector('#cPlayer');
         ctx = c.getContext('2d');
+
         img = document.createElement('img');
-        img.src = url;
-        this.cShots = cShots;
+        img.src = './img/player.png';
+
+        this.cShots = document.querySelector('#cShots');
         this.ctxShots = this.cShots.getContext('2d');
+
+        this.cMG = document.querySelector('#middleGround');
+        this.ctxMG = this.cMG.getContext('2d');
 
         this.resize();
         window.addEventListener('resize', this.resize);
@@ -50,14 +54,20 @@ class Player {
             this.isShooting &&
             (this.shots.length == 0 || Date.now() > this.shots[this.shots.length - 1].nextShotIn)
         ) {
-            this.shots.push(new Shot(0, this.x, this.y, this.cShots, this.cCollide));
+            this.shots.push(new Shot(0, this.x, this.y, this.cShots, this.cMG));
             //console.log(this.shots);
         }
 
         this.ctxShots.clearRect(0, 0, this.cShots.width, this.cShots.height);
 
+        let imgShot = ctx.getImageData(0, 0, c.width, c.height)
+        let imgCollider = this.ctxMG.getImageData(0, 0, c.width, c.height)
+
+
+        this.ctxMG.putImageData(imgCollider, 0, 0);
+
         this.shots.map(shot => {
-            shot.update();
+            shot.update(imgShot, imgCollider);
             shot.draw();
         });
 
