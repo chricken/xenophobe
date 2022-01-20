@@ -1,12 +1,12 @@
 'use strict';
 
-class Environment  {
-    constructor(){
+class Environment {
+    constructor() {
         this.imgW = 0;
         this.imgH = 0;
         this.scrollPos = 0;
         this.scrollSpeed = 3;
-        
+
         this.cBG = document.querySelector('#backGround');
         this.ctxBG = this.cBG.getContext('2d');
         this.cMG = document.querySelector('#middleGround');
@@ -24,7 +24,7 @@ class Environment  {
             console.log
         )
     }
-    resize () {
+    resize() {
         let h = window.innerHeight;
         let w = window.innerWidth;
         let min = Math.min(w, h);
@@ -34,41 +34,41 @@ class Environment  {
         this.cMG.height = min;
         this.cFG.width = min;
         this.cFG.height = min;
-    
+
         this.imgW = this.imgBG.naturalWidth;
         this.imgH = this.imgBG.naturalHeight;
     }
-    loadImages () {
+    loadImages() {
         this.imgBG = document.createElement('img');
         this.imgBG.src = "img/bg.png";
-    
+
         this.imgMG = document.createElement('img');
         this.imgMG.src = "img/mg.png";
-    
+
         this.imgFG = document.createElement('img');
         this.imgFG.src = "img/fg.png";
-    
+
         // Funktion, die vom Eventlistener wieder entfernt werden kann, da Promises nur einmal aufgerufen werden können.
         // https://stackoverflow.com/questions/35718645/resolving-a-promise-with-eventlistener
         function loadingDone(resolve) {
             this.removeEventListener('load', loadingDone);
             resolve(this)
         }
-    
+
         // Ein Sammelpromise, um auf alle Bilder zu reagieren
         return Promise.all([
             new Promise(resolve => {
-                this.imgBG.addEventListener('load', function () {
+                this.imgBG.addEventListener('load', function() {
                     loadingDone.call(this, resolve);
                 }, false);
             }),
             new Promise(resolve => {
-                this.imgMG.addEventListener('load', function () {
+                this.imgMG.addEventListener('load', function() {
                     loadingDone.call(this, resolve);
                 }, false);
             }),
             new Promise(resolve => {
-                this.imgFG.addEventListener('load', function () {
+                this.imgFG.addEventListener('load', function() {
                     loadingDone.call(this, resolve);
                 }, false);
             })

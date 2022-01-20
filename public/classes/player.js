@@ -50,30 +50,32 @@ class Player {
         this.x += diffX * this.drag;
         this.y += diffY * this.drag;
 
+        // Wenn die Maustaste gedrückt und die Wartezeit abgelaufen ist, einen neuen Schuss einhängen
         if (
             this.isShooting &&
             (this.shots.length == 0 || Date.now() > this.shots[this.shots.length - 1].nextShotIn)
         ) {
             this.shots.push(new Shot(0, this.x, this.y, this.cShots, this.cMG));
-            //console.log(this.shots);
         }
 
+        // Canvas für die Projektile leeren, um sie später zu füllen
         this.ctxShots.clearRect(0, 0, this.cShots.width, this.cShots.height);
 
-        let imgShot = ctx.getImageData(0, 0, c.width, c.height)
+        // Inhalte der Canvasse für die Hittests auslesen
+        // Geschieht hier, damit dieser aufwendige Schritt möglichst selten ausgeführt werden muss
+        let imgShot = this.ctxShots.getImageData(0, 0, c.width, c.height)
         let imgCollider = this.ctxMG.getImageData(0, 0, c.width, c.height)
 
-
-        this.ctxMG.putImageData(imgCollider, 0, 0);
-
+        // Alle Projektile zuerst zeichnen, dann updaten
+        // Diese Reihenfolge, weil das Projektil ja schon gezeichnet sein muss, um seine Pixels später lesen zu können
         this.shots.map(shot => {
-            shot.update(imgShot, imgCollider);
             shot.draw();
+            shot.update(imgShot, imgCollider);
         });
 
+        // Als gelöscht markierte Projektile entfernen
         this.shots = this.shots.filter(shot => !shot.killMe);
 
-        // console.log(this.shots);
     }
     draw() {
         // console.log(this.x, c.width, c.width * this.x);
