@@ -1,5 +1,7 @@
 'use strict';
 
+import calc from '../calc.js';
+
 const createImage = url => {
     let img = document.createElement('img');
     img.src = url;
@@ -9,12 +11,12 @@ const createImage = url => {
 const Types = [
     class {
         constructor(angle = Math.PI * 1.5) {
-            this.speed = Math.random() * 1 + 8;
-            this.angle = Math.PI * 1.5; // Senkrecht nach oben
+            this.speed = Math.random() * 100 + 200;
+            this.angle = Math.PI * calc.createNumber(1.3, 1.7); // Senkrecht nach oben
             this.img = createImage('./img/shot.png');
             this.w = .03;
             this.h = .03;
-            this.nextShotIn = Date.now() + 100;
+            this.nextShotIn = Date.now() + 60;
             this.killMe = false;
         }
     }
@@ -38,23 +40,32 @@ class Shot {
 
         if (this.bgHitTest(shotData, mgData)) this.killMe = true;
 
-        if (this.y - speed > 0) {
-            this.y -= speed;
-        } else {
+        let diffY = Math.sin(this.angle) / this.speed;
+        let diffX = Math.cos(this.angle) / this.speed;
+        this.x += diffX;
+        this.y += diffY;
+
+        if (this.y + diffY <= -.1) {
+            // console.log(this.x, this.y);
             this.killMe = true;
         }
     }
+
     draw() {
         let w = this.w * this.c.width;
         let h = this.h * this.c.width;
+        this.ctx.translate(this.x * this.c.width, this.y * this.c.width);
+        this.ctx.rotate(this.angle - 1.5 * Math.PI);
         this.ctx.drawImage(
             this.img,
-            (this.x * this.c.width) - (w / 2),
-            (this.y * this.c.width) - (h / 2),
+            0 - (w / 2),
+            0 - (h / 2),
             this.c.width * this.w,
             this.c.width * this.h,
         )
+        this.ctx.setTransform(1, 0, 0, 1, 0, 0);
     }
+
     bgHitTest(imgDataShot, imgDataCollider) {
 
         let x = ~~(this.x * this.c.width);
@@ -62,8 +73,8 @@ class Shot {
 
         let hit = false;
 
-        console.clear()
-            // Um die Mitte herum auf Hit prüfen
+        // console.clear()
+        // Um die Mitte herum auf Hit prüfen
         let radius = 3;
         for (let i = -radius; i <= radius; i++) {
             for (let j = -radius; j <= radius; j++) {
